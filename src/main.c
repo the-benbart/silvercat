@@ -1,11 +1,11 @@
 #include <stdio.h>
-#include <headers.h>
+#include <inc/gears.h>
+#include <src/main.c>
 
 int main (void)
 {
-   printLCD ("Hello, Wait for initialisation");
-   printLCD ("Salut, Patientez pendant l initialisation");
-
-   return 0;
-}  
-
+  init();
+  menu();
+  steve();
+  return 0;
+}
