@@ -1,3 +1,4 @@
+/* main script for drive the program */
 #include <stdio.h>
 #include <inc/gears.h>
 #include <src/main.c>

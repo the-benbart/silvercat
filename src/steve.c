@@ -1,1 +1,1 @@
-/* job du protocole */
+/* main script for drive Steve protocol */
