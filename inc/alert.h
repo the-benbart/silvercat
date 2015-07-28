@@ -1,1 +1,1 @@
-/* bib alert for notify end of protocol */
+/* bip alert for notify end of protocol */
