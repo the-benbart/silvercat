@@ -1,6 +1,9 @@
 /* main script for drive Steve protocol */
 void steve( void )
 {
+do {
+  /* code */
+} while(/* condition */);
   lcdCalibrage();
   calibrage();
 

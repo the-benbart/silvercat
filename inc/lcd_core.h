@@ -5,7 +5,11 @@ int lcdShow( int lcdScreen ){
   switch (lcdScreen) {
 
     case 1:
-    /* Lancement du protocole */
+    lcdMessage (void)
+    {
+      LcdString(" La machine se prépare, \n")
+      LcdString(" Veuillez Patienter")
+    }
     break;
 
     case 2:

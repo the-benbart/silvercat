@@ -211,22 +211,13 @@ void setup(void)
 {
 	LcdInitialise();
 	LcdClear();
-	LcdString("            ");
-  LcdString(" Ian Lang  ");
-  LcdString( " Electronics ");
-  LcdString("Presents...");
-  delay(2000);
-	LcdClear();
-	LcdInitialise();
-  LcdString("                          LCD DEMO");
-	delay(2000);
-	LcdString("              ");
-	LcdString("for text and ");
-	LcdString(" graphics.");
-	delay(3000);
+	lcdMessage();
+	/*delay(20000);
+	LcdClear();*/
 }
+
 void loop(void)
-{
+{/*
   delay(500);
 	LcdClear();
 	LcdInitialise();
@@ -490,4 +481,4 @@ void loop(void)
   	LcdString(" ");
 		delay(20);
 	}
-}
+*/}
