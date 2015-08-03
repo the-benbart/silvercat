@@ -6,21 +6,13 @@ void steve( void )
 {
   do
   {
-
-    lcdCalibrage();
-    calibrage();
-
-    lcdDown();
-    doDown();
-
-    lcdHold();
-    doHold();
-
-    lcdUp();
-    doUp();
-
-    lcdTerminate();
-    calibrage();
+    takeToken(1); // Take the Token / If 0=return token / 1=Got Token
+    sreen(1);
+    if (captorUp = 0) // calibrage
+    {
+      motorControl(1); // 0 = Idle 1=To UP 2= To Down
+    }                 // End calibrage
+                      //Down
   }
 while( stop == 0);
 

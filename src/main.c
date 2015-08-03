@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "inc/gears.h"
 #include "src/steve.c"
-#include "inc/lcd_core.h"
+#include "inc/lcd.h"
 
 /* Main contain only "menu_principale"
 inch case contain :
