@@ -24,9 +24,8 @@ int steve (void)
   while ( captorUP != 1 || token == 1 )
   {
     screen(calibrageRUN)
-    token = 0
     gearsUP(struct config(calibrageSpeed))
-    token = 1
+    token = token++
   }
   screen(calibrageStop)
 
@@ -40,12 +39,11 @@ int steve (void)
 
   /////////////////////////////////////////////////////
   screen(downStart)
-  while ( captorDown != 1 || token == 1 )
+  while ( captorDown != 1 || token == 2 )
   {
-    token = 0
     screen(downRUN)
     gearsDown(struct config(downSpeed))
-    token = 1
+    token = token++
   }
   screen(downStop)
   /////////////////////////////////////////////////////
@@ -58,12 +56,11 @@ int steve (void)
 
   /////////////////////////////////////////////////////
   screen(holdStart)
-  while (captorDown == 1 || token == 1)
+  while (captorDown == 1 || token == 3)
   {
-    token = 0
     screen(holdRUN)
     sleep (struct config(holdSleep))
-    token = 1
+    token = token++
   }
   screen(holdStop)
   /////////////////////////////////////////////////////
@@ -76,12 +73,11 @@ int steve (void)
 
   /////////////////////////////////////////////////////
   screen(upStart)
-  while ( captorUp != 1 || token == 1 )
+  while ( captorUp != 1 || token == 4 )
   {
-    token = 0
     screen(upRUN)
     gearsUp(struct config(upSpeed))
-    token = 1
+    token = token++
   }
   screen(upStop)
 }
