@@ -21,13 +21,18 @@ int steve (void)
 //                calibrage stage on               //
 
 /////////////////////////////////////////////////////
-  while ( captorUP != 1 || token == 1 )
+  while ( captorUP != 1 || token == 1 )
   {
     screen(calibrageRUN)
     gearsUP(struct config(calibrageSpeed))
     token = token++
   }
   screen(calibrageStop)
+  if ( token != 2 )
+  {
+    screen(tokenError)
+    break;
+  }
 
   /////////////////////////////////////////////////////
 
@@ -39,13 +44,18 @@ int steve (void)
 
   /////////////////////////////////////////////////////
   screen(downStart)
-  while ( captorDown != 1 || token == 2 )
+  while ( captorDown != 1 || token == 2 )
   {
     screen(downRUN)
     gearsDown(struct config(downSpeed))
     token = token++
   }
   screen(downStop)
+  if ( token != 3 )
+  {
+    screen(tokenError)
+    break;
+  }
   /////////////////////////////////////////////////////
 
   //                Peigne gearsDown off             //
@@ -63,6 +73,11 @@ int steve (void)
     token = token++
   }
   screen(holdStop)
+  if ( token != 4 )
+  {
+    screen(tokenError)
+    break;
+  }
   /////////////////////////////////////////////////////
 
   //                Peigne gearsHold off             //
@@ -73,16 +88,46 @@ int steve (void)
 
   /////////////////////////////////////////////////////
   screen(upStart)
-  while ( captorUp != 1 || token == 4 )
+  while ( captorUp != 1 || token == 4 )
   {
     screen(upRUN)
     gearsUp(struct config(upSpeed))
     token = token++
   }
   screen(upStop)
+  if ( token != 5 )
+  {
+    screen(tokenError)
+    break;
+  }
+  /////////////////////////////////////////////////////
+
+  //                Peigne gearsUP off               //
+
+  /////////////////////////////////////////////////////
+
+  //                Peigne Alert on                  //
+
+  /////////////////////////////////////////////////////
+  screen(alertStart)
+  while ( captorDown == 1 || token == 5 )
+  {
+    screen(alert)
+    bibAlert(struct config(alertMod))
+    token = token++
+    interface(any)
+  }
+  screen(alertStop)
+  if ( token != 6 )
+  {
+    screen(tokenError)
+    break;
+  }
+  /////////////////////////////////////////////////////
+
+  //                Peigne Alert off                 //
+
+  /////////////////////////////////////////////////////
+
+
 }
-/////////////////////////////////////////////////////
-
-//                Peigne gearsUP off               //
-
-/////////////////////////////////////////////////////
