@@ -1,4 +1,6 @@
 /* gestion des options au protocole */
+option()
+{
 int tweakMenu;
 
 screen(tweakMenu);
@@ -43,3 +45,4 @@ switch (tweakMenu)
 
 }
 return 0;
+}

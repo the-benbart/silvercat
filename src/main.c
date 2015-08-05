@@ -3,8 +3,10 @@
 #include "inc/gears.h"
 #include "src/steve.c"
 #include "inc/lcd.h"
+#include <time.h>
+screen(init)
 
-/* Main contain only "menu_principale"
+/* Main contain only "mainMenu"
 inch case contain :
 1 - LCD display message
 2 - Console preview
@@ -16,29 +18,29 @@ inch case contain :
 
 int main (int argc, char *argv[])
 {
-  int menu_principale;
+  int mainMenu;
 
-  lcdShow( int lcdScreen = 100 );
+  screen(welcome);
   printf("---=== Menu ===---\n\n");
   printf("Lancer le protocole de peignage\n");
   printf("Modifier le protocole\n");
   printf("recalibrer le peigne ADN\n");
-  scanf("%d", &menu_principale);
+  scanf("%d", &mainMenu);
   printf("\n");
 
-  switch (menu_principale)
+  switch (mainMenu)
   {
 
     case 1:
-      lcdShow(int lcdScreen = 1);
+      screen(steveStartup);
       printf("Lancement du protocole de peignage ...");
-      job_steve();
+      steve();
       break;
 
     case 2:
-      lcdShow( int lcdScreen = 2);
+      screen(optStartup);
       printf("Lancement de l'outil de modification du protocole ...");
-      job_modification_protocole();
+      ();
       break;
 
     case 3:

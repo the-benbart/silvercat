@@ -15,22 +15,22 @@ int alert;
 
 int steve (void)
 {
-  screen(calibrageStart)
+  screen(calibrageStart); // screen Show LCD interface
 /////////////////////////////////////////////////////
 
 //                calibrage stage on               //
 
 /////////////////////////////////////////////////////
-  while ( captorUP != 1 || token == 1 )
+  while ( captorUP != 1 || token == 1 ) //
   {
-    screen(calibrageRUN)
-    gearsUP(struct config(calibrageSpeed))
-    token = token++
+    screen(calibrageRUN);
+    gearsUp(struct config(calibrageSpeed));
+    token = token++;
   }
-  screen(calibrageStop)
+  screen(calibrageStop);
   if ( token != 2 )
   {
-    screen(tokenError)
+    screen(tokenError);
     break;
   }
 
@@ -43,17 +43,17 @@ int steve (void)
   //                Peigne gearsDown on              //
 
   /////////////////////////////////////////////////////
-  screen(downStart)
+  screen(downStart);
   while ( captorDown != 1 || token == 2 )
   {
-    screen(downRUN)
-    gearsDown(struct config(downSpeed))
-    token = token++
+    screen(downRUN);
+    gearsDown(struct config(downSpeed));
+    token = token++;
   }
-  screen(downStop)
+  screen(downStop);
   if ( token != 3 )
   {
-    screen(tokenError)
+    screen(tokenError);
     break;
   }
   /////////////////////////////////////////////////////
@@ -65,17 +65,17 @@ int steve (void)
   //                Peigne gearsHold on              //
 
   /////////////////////////////////////////////////////
-  screen(holdStart)
+  screen(holdStart);
   while (captorDown == 1 || token == 3)
   {
-    screen(holdRUN)
-    sleep (struct config(holdSleep))
-    token = token++
+    screen(holdRUN);
+    sleep(struct config(holdSleep));
+    token = token++;
   }
-  screen(holdStop)
+  screen(holdStop);
   if ( token != 4 )
   {
-    screen(tokenError)
+    screen(tokenError);
     break;
   }
   /////////////////////////////////////////////////////
@@ -84,43 +84,43 @@ int steve (void)
 
   /////////////////////////////////////////////////////
 
-  //                Peigne gearsUP on                //
+  //                Peigne gearsUp on                //
 
   /////////////////////////////////////////////////////
-  screen(upStart)
+  screen(upStart);
   while ( captorUp != 1 || token == 4 )
   {
-    screen(upRUN)
-    gearsUp(struct config(upSpeed))
-    token = token++
+    screen(upRUN);
+    gearsUp(struct config(upSpeed));
+    token = token++;
   }
-  screen(upStop)
+  screen(upStop);
   if ( token != 5 )
   {
-    screen(tokenError)
+    screen(tokenError);
     break;
   }
   /////////////////////////////////////////////////////
 
-  //                Peigne gearsUP off               //
+  //                Peigne gearsUp off               //
 
   /////////////////////////////////////////////////////
 
   //                Peigne Alert on                  //
 
   /////////////////////////////////////////////////////
-  screen(alertStart)
+  screen(alertStart);
   while ( captorDown == 1 || token == 5 )
   {
-    screen(alert)
-    bibAlert(struct config(alertMod))
-    token = token++
-    interface(any)
+    screen(alertRUN);
+    bibAlert(struct config(alertMod));
+    token = token++;
+    interface(any);
   }
-  screen(alertStop)
+  screen(alertStop);
   if ( token != 6 )
   {
-    screen(tokenError)
+    screen(tokenError);
     break;
   }
   /////////////////////////////////////////////////////
