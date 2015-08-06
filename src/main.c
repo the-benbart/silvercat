@@ -4,7 +4,7 @@
 #include "src/steve.c"
 #include "inc/lcd.h"
 #include <time.h>
-screen(init)
+ LCDInit();
 
 /* Main contain only "mainMenu"
 inch case contain :

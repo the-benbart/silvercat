@@ -1,32 +1,14 @@
-/* Steve & Hardware header
-function init
-function doCalculTime
-function doUp
-function doHold
-function doDown
-function doFinish
-function calibrage
-*/
-
-/////////////////////////////////////////////////////
-
-//                motor control               //
-
-/////////////////////////////////////////////////////
-
-
-gearsDown(); // function for climb the platform
-gearsUp(); // function for descend the platform
-
-
-
-/////////////////////////////////////////////////////
-
-//                LCD control                      //
-
-/////////////////////////////////////////////////////
-
-int screen(lcdScreen){
+//  Steve header //  The motor/LCD/PushButtoms API//
+////////////////////////////////////////////////////////////////////////////////
+//                          motor control                                     //
+////////////////////////////////////////////////////////////////////////////////
+gearsDown(int); // function for climb the platform
+gearsUp(int); // function for descend the platform
+////////////////////////////////////////////////////////////////////////////////
+//                          LCD control                                       //
+////////////////////////////////////////////////////////////////////////////////
+int screen(lcdScreen) //
+{
   switch (lcdScreen)
   {
 
@@ -127,17 +109,103 @@ int screen(lcdScreen){
       LcdString("Err: optError");
     break;
     default
-      LcdString("Une erreur est survenue\n");
       LcdString("Err: ScreenDefault");
     break;
     }
   }
-
-struct config // Core configuration, PLEASE DON'T TOUCH
-{
-  int calibrageSpeed[255]; // 0-255 speed to Calibrate, DO NOT TOUCH
-  int downSpeed[255]; // 0-255 speed to DOWN, DO NOT TOUCH
-  int holdSleep[255]; // Time to incubate, DO NOT TOUCH
-  int upSpeed[255]; // 0-255 speed to UP, DO NOT TOUCH
-  int alertMod[2]; // 0=No Alert / 1 = Few 3 bip alert / 2 = One bip every 5 seconds
-}
+////////////////////////////////////////////////////////////////////////////////
+//                           calibrage stage                                  //
+////////////////////////////////////////////////////////////////////////////////
+  doCalibrate()
+  {
+    screen(calibrageStart);
+    while ( captorUP != 1 || token == 1 ) //
+    {
+      screen(calibrageRUN);
+      gearsUp(struct config(calibrageSpeed));
+      token = token++;
+    }
+    screen(calibrageStop);
+    if ( token != 2 )
+    {
+      screen(tokenError);
+      break;
+    }
+  }
+////////////////////////////////////////////////////////////////////////////////
+//                            gearsDown stage                                 //
+////////////////////////////////////////////////////////////////////////////////
+  doDown()
+  {
+    screen(downStart);
+    while ( captorDown != 1 || token == 2 )
+    {
+      screen(downRUN);
+      gearsDown(struct config(downSpeed));
+      token = token++;
+    }
+    screen(downStop);
+    if ( token != 3 )
+    {
+      screen(tokenError);
+      break;
+    }
+  }
+////////////////////////////////////////////////////////////////////////////////
+//                            Peigne gearsHold stage                          //
+////////////////////////////////////////////////////////////////////////////////
+  doHold()
+    {
+      screen(holdStart);
+      while (captorDown == 1 || token == 3)
+      {
+        screen(holdRUN);
+        sleep(struct config(holdSleep));
+        token = token++;
+      }
+      screen(holdStop);
+      if ( token != 4 )
+      {
+        screen(tokenError);
+        break;
+      }
+    }
+////////////////////////////////////////////////////////////////////////////////
+//                              Peigne gearsUp stage                          //
+////////////////////////////////////////////////////////////////////////////////
+    doUp()
+      {
+        screen(upStart);
+        while ( captorUp != 1 || token == 4 )
+        {
+          screen(upRUN);
+          gearsUp(struct config(upSpeed));
+          token = token++;
+        }
+        screen(upStop);
+        if ( token != 5 )
+        {
+          screen(tokenError);
+          break;
+        }
+      }
+////////////////////////////////////////////////////////////////////////////////
+//                                Peigne Alert stage                          //
+////////////////////////////////////////////////////////////////////////////////
+    doAlert()
+      {
+        screen(alertStart);
+        while ( captorDown == 1 || token == 5 )
+        {
+          screen(alertRUN);
+          bibAlert(struct config(alertMod));
+          token = token++;
+          interface(any);
+        }
+        screen(alertStop);
+        if ( token != 6 )
+        {
+          screen(tokenError);
+          break;
+        }
+      }

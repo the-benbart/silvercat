@@ -1,22 +1,23 @@
-/* DRIVERS for LCD part*/
 
-
-/* PIN TABLE FOR LCD USE */
+////////////////////////////////////////////////////////////////////////////////
+//                        Pin Table                                           //
+////////////////////////////////////////////////////////////////////////////////
 #define PIN_SCE   7
 #define PIN_RESET 6
 #define PIN_DC    5
 #define PIN_SDIN  4
 #define PIN_SCLK  3
+
 #define LCD_C     LOW
 #define LCD_D     HIGH
+
 #define LCD_X     84
 #define LCD_Y     48
-#define LCD_DATA  1
-/*=====================*/
-
-
-/* ASCII TABLE for print on LCD SCREEN */
-byte ASCII[][5] =
+/////
+////////////////////////////////////////////////////////////////////////////////
+//                      ASCII to hexa Table                                   //
+////////////////////////////////////////////////////////////////////////////////
+static const byte ASCII[][5] =
 {
  {0x00, 0x00, 0x00, 0x00, 0x00} // 20
 ,{0x00, 0x00, 0x5f, 0x00, 0x00} // 21 !
@@ -110,375 +111,72 @@ byte ASCII[][5] =
 ,{0x0c, 0x50, 0x50, 0x50, 0x3c} // 79 y
 ,{0x44, 0x64, 0x54, 0x4c, 0x44} // 7a z
 ,{0x00, 0x08, 0x36, 0x41, 0x00} // 7b {
-,{0xff, 0xff, 0xff, 0xff, 0xff} // 7c | modified
-,{0x1c, 0xf6, 0x3f, 0xf6, 0x1c} // 7d } modified
+,{0x00, 0x00, 0x7f, 0x00, 0x00} // 7c |
+,{0x00, 0x41, 0x36, 0x08, 0x00} // 7d }
 ,{0x10, 0x08, 0x08, 0x10, 0x08} // 7e ←
 ,{0x78, 0x46, 0x41, 0x46, 0x78} // 7f →
 };
-/*=============================================*/
-
-
-void knockdown()
-{
-	for (int index = 0 ; index < 72 ; index++)
-	{
-  	LcdString(" ");
-		delay(20);
-	}
-}
-
+/////
+////////////////////////////////////////////////////////////////////////////////
+//                        Routine                                             //
+////////////////////////////////////////////////////////////////////////////////
 void LcdCharacter(char character)
 {
-	LcdWrite(LCD_D, 0x00);
-	for (int index = 0; index < 5; index++)
+  LcdWrite(LCD_D, 0x00);
+  for (int index = 0; index < 5; index++)
   {
-		LcdWrite(LCD_D, ASCII[character - 0x20][index]);
-	}
-	LcdWrite(LCD_D, 0x00);
+    LcdWrite(LCD_D, ASCII[character - 0x20][index]);
+  }
+  LcdWrite(LCD_D, 0x00);
 }
 
 void LcdClear(void)
 {
-	for (int index = 0; index < 504; index++)
-	{
-		LcdWrite(LCD_D, 0x00);
-	}
+  for (int index = 0; index < LCD_X * LCD_Y / 8; index++)
+  {
+    LcdWrite(LCD_D, 0x00);
+  }
 }
-
+/////
+////////////////////////////////////////////////////////////////////////////////
+//                        Init the LCD screen                                 //
+////////////////////////////////////////////////////////////////////////////////
 void LcdInitialise(void)
 {
-	pinMode(PIN_SCE, OUTPUT);
+  pinMode(PIN_SCE, OUTPUT);
   pinMode(PIN_RESET, OUTPUT);
   pinMode(PIN_DC, OUTPUT);
   pinMode(PIN_SDIN, OUTPUT);
   pinMode(PIN_SCLK, OUTPUT);
   digitalWrite(PIN_RESET, LOW);
   digitalWrite(PIN_RESET, HIGH);
+/////
+////////////////////////////////////////////////////////////////////////////////
+//                         Set LCD config                                     //
+////////////////////////////////////////////////////////////////////////////////
   LcdWrite(LCD_C, 0x21 );  // LCD Extended Commands.
-  LcdWrite(LCD_C, 0xB5 );  // Set LCD Vop (Contrast).
+  LcdWrite(LCD_C, 0xB1 );  // Set LCD Vop (Contrast).
+  LcdWrite(LCD_C, 0x04 );  // Set Temp coefficent. //0x04
   LcdWrite(LCD_C, 0x14 );  // LCD bias mode 1:48. //0x13
-  LcdWrite(LCD_C, 0x20 );
-  LcdWrite(LCD_C, 0x0C );
+  LcdWrite(LCD_C, 0x20 );  // LCD Basic Commands
+  LcdWrite(LCD_C, 0x0C );  // LCD in normal mode.
 }
+/////
+////////////////////////////////////////////////////////////////////////////////
+//                        WRAPPER writer                                      //
+////////////////////////////////////////////////////////////////////////////////
 void LcdString(char *characters)
 {
-	while (*characters)
-	{
+  while (*characters)
+  {
     LcdCharacter(*characters++);
-	}
+  }
 }
 
 void LcdWrite(byte dc, byte data)
 {
-	digitalWrite(PIN_DC, dc);
+  digitalWrite(PIN_DC, dc);
   digitalWrite(PIN_SCE, LOW);
   shiftOut(PIN_SDIN, PIN_SCLK, MSBFIRST, data);
   digitalWrite(PIN_SCE, HIGH);
 }
-
-void posmarker(int x, int y)
-{
-  LcdWrite( 0, 0x80 | x);  // Column.
-  LcdWrite( 0, 0x40 | y);  // Row
-}
-
-void rectangle()
-{
-  unsigned char  j;
-  for(j=0; j<84; j++) // top
-	{
-		posmarker (j,0);
-	  LcdWrite (1,0x01);
-	}
-  for(j=0; j<84; j++) //Bottom
-	{
-		posmarker (j,5);
-	  LcdWrite (1,0x80);
-	}
-  for(j=0; j<6; j++) // Right
-	{
-		posmarker (83,j);
-	  LcdWrite (1,0xff);
-	}
-	for(j=0; j<6; j++) // Left
-	{
-		posmarker (0,j);
-	  LcdWrite (1,0xff);
-	}
-}
-
-void setup(void)
-{
-	LcdInitialise();
-	LcdClear();
-	lcdMessage();
-	/*delay(20000);
-	LcdClear();*/
-}
-
-void loop(void)
-{/*
-  delay(500);
-	LcdClear();
-	LcdInitialise();
-  LcdString("The original intention  of your LCD was as Nokia 5110 phone screens...");
-	delay(5000);
-  LcdClear();
-	LcdInitialise();
-  LcdString("            ");
-	LcdString(" But it can  be used on your Arduino    too.");
-	delay(5000);
-  delay(5000);
-	LcdClear();
-	LcdInitialise();
-  LcdString("Let's make a box and put some text   in it....");
-	delay(5000);
-	LcdClear();
-	LcdInitialise();
-	rectangle();
-	delay(2000);
-	posmarker(18,2);////////18th PIXEL not bank and third row
-	LcdCharacter('A');
-	LcdCharacter('r');
-	LcdCharacter('d');
-	LcdCharacter('u');
-	LcdCharacter('i');
-	LcdCharacter('n');
-  LcdCharacter('o');
-	delay(3000);
-	knockdown();
-	delay(500);
-	LcdInitialise();
-	LcdString("            ");
-	LcdString("  How about    smaller     boxes?");
-	delay(3000);
-  LcdClear();
-	LcdInitialise();
-	LcdString("            ");
-	LcdString(" No problem.");
-  for(int j=0; j<84; j++) // top
-	{
-		posmarker (j,0);
-		LcdWrite (1,0x01);
-	}
-  for(int j=0; j<84; j++) //Bottom
-	{
-		posmarker (j,2);
-		LcdWrite (1,0x80);
-	}
-  for(int j=0; j<3; j++) // Right
-	{
-		posmarker (83,j);
-		LcdWrite (1,0xff);
-	}
-	for(int j=0; j<3; j++) // Left
-	{
-		posmarker (0,j);
-		LcdWrite (1,0xff);
-	}
-	delay(1000);
-  for(int j=0; j<36; j++) // top
-	{
-		posmarker (j,4);
-	  LcdWrite (1,0x01);
-	}
-  for(int j=0; j<36; j++) //Bottom
-	{
-		posmarker (j,5);
-	  LcdWrite (1,0x80);
-	}
-  for(int j=4; j<6; j++) // Right
-	{
-		posmarker (35,j);
-	  LcdWrite (1,0xff);
-	}
-	for(int j=4; j<6; j++) // Left
-	{
-		posmarker (0,j);
-	  LcdWrite (1,0xff);
-	}
-	delay(1000);
-  for(int j=40; j<84; j++) // top
-	{
-		posmarker (j,4);
-	  LcdWrite (1,0x01);
-	}
-  for(int j=40; j<84; j++) //Bottom
-	{
-		posmarker (j,5);
-	  LcdWrite (1,0x80);
-	}
-  for(int j=4; j<6; j++) // Right
-	{
-		posmarker (83,j);
-	  LcdWrite (1,0xff);
-	}
-	for(int j=4; j<6; j++) // Left
-	{
-		posmarker (40,j);
-	  LcdWrite (1,0xff);
-	}
-	delay(3000);
-	LcdClear();
-	LcdInitialise();
-  LcdString("             Let's do    some text   effects...");
-  delay(3000);
-	LcdClear();
-	LcdInitialise();
-	for (int index = 0 ; index < 72 ; index++)
-	{
-  	LcdString("|");
-		delay(20);
-	}
-	LcdInitialise();
-	for (int index = 0 ; index<72 ; index++)
-	{
-  	LcdString(" ");
-		delay(20);
-	}
-	delay(500);
-	int drop=200;
-	for(int j=0;j<4;j++)
-	{
-  	posmarker(18,j);
-		LcdCharacter('D');
-		posmarker(18,j-1);
-		LcdCharacter(' ');
-		delay(drop);
-	}
-  for(int j=0;j<4;j++)
-	{
-  	posmarker(25,j);
-		LcdCharacter('r');
-		posmarker(25,j-1);
-		LcdCharacter(' ');
-		delay(drop);
-	}
- 	for(int j=0;j<4;j++)
-	{
-  	posmarker(32,j);
-		LcdCharacter('o');
-		posmarker(32,j-1);
-		LcdCharacter(' ');
-		delay(drop);
-	}
-  for(int j=0;j<4;j++)
-	{
-		posmarker(39,j);
-		LcdCharacter('p');
-		posmarker(39,j-1);
-		LcdCharacter(' ');
-		delay(drop);
-	}
-	posmarker(46,3);
-	LcdCharacter(' ');
-  for(int j=0;j<4;j++)
-	{
-		posmarker(53,j);
-		LcdCharacter('i');
-		posmarker(53,j-1);
-		LcdCharacter(' ');
-		delay(drop);
-	}
-	for(int j=0;j<4;j++)
-	{
-		posmarker(60,j);
-		LcdCharacter('n');
-		posmarker(60,j-1);
-		LcdCharacter(' ');
-		delay(drop);
-	}
-	delay(2000);
-  for(int j=3;j>-1;j--)
-	{
-  	posmarker(18,j);
-		LcdCharacter('D');
-		posmarker(18,j+1);
-		LcdCharacter(' ');
-		delay(drop);
-	}
-	for(int j=3;j>-1;j--)
-	{
-  	posmarker(25,j);
-		LcdCharacter('r');
-		posmarker(25,j+1);
-		LcdCharacter(' ');
-		delay(drop);
-	}
- 	for(int j=3;j>-1;j--)
-	{
-  	posmarker(32,j);
-		LcdCharacter('o');
-		posmarker(32,j+1);
-		LcdCharacter(' ');
-		delay(drop);
-	}
-  for(int j=3;j>-1;j--)
-	{
-		posmarker(39,j);
-		LcdCharacter('p');
-		posmarker(39,j+1);
-		LcdCharacter(' ');
-		delay(drop);
-	}
-	posmarker(46,3);LcdCharacter(' ');
-  for(int j=3;j>-1;j--)
-	{
-		posmarker(53,j);
-		LcdCharacter('i');
-		posmarker(53,j+1);
-		LcdCharacter(' ');
-		delay(drop);
-	}
-	for(int j=3;j>-1;j--)
-	{
-		posmarker(60,j);
-		LcdCharacter('n');
-		posmarker(60,j+1);
-		LcdCharacter(' ');
-		delay(drop);
-	}
-	delay(2000);
- 	for(int j=0;j<4;j++)
-	{
-  	posmarker(18,j);
-		LcdCharacter('D');
-		posmarker(18,j-1);
-		LcdCharacter(' ');
-  	posmarker(25,j);
-		LcdCharacter('r');
-		posmarker(25,j-1);
-		LcdCharacter(' ');
-  	posmarker(32,j);
-		LcdCharacter('o');
-		posmarker(32,j-1);
-		LcdCharacter(' ');
-		posmarker(39,j);
-		LcdCharacter('p');
-		posmarker(39,j-1);
-		LcdCharacter(' ');
-		posmarker(46,3);
-		LcdCharacter(' ');
-		posmarker(53,j);
-		LcdCharacter('i');
-		posmarker(53,j-1);
-		LcdCharacter(' ');
-		posmarker(60,j);
-		LcdCharacter('n');
-		posmarker(60,j-1);
-		LcdCharacter(' ');
-		delay(drop);
-	}
-	delay(3000);
-  LcdInitialise();
-  for (int index = 0 ; index < 72 ; index++)
-	{
-  	LcdString("|");
-		delay(20);
-	}
-  for (int index = 72 ; index>-1 ; index--)
-	{
-  	LcdString(" ");
-		delay(20);
-	}
-*/}
