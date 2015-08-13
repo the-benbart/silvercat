@@ -4,8 +4,6 @@
 #include "src/steve.c"
 #include "inc/lcd.h"
 #include <time.h>
- LCDInit();
-
 /* Main contain only "mainMenu"
 inch case contain :
 1 - LCD display message
@@ -16,7 +14,7 @@ inch case contain :
 
 
 
-int main (int argc, char *argv[])
+int main (void)
 {
   int mainMenu;
 
@@ -40,7 +38,7 @@ int main (int argc, char *argv[])
     case 2:
       screen(optStartup);
       printf("Lancement de l'outil de modification du protocole ...");
-      ();
+      option();
       break;
 
     case 3:
