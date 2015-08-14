@@ -168,9 +168,12 @@ void LcdInitialise(void)
 void LcdString(char *characters)
 {
   while (*characters)
+  LcdClear();
+  gotoXY (2,2);
   {
     LcdCharacter(*characters++);
   }
+  delay(1000);
 }
 
 void LcdWrite(byte dc, byte data)

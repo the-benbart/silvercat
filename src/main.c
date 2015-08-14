@@ -17,40 +17,27 @@ inch case contain :
 int main (void)
 {
   int mainMenu;
-
   screen(welcome);
-  printf("---=== Menu ===---\n\n");
-  printf("Lancer le protocole de peignage\n");
-  printf("Modifier le protocole\n");
-  printf("recalibrer le peigne ADN\n");
-  scanf("%d", &mainMenu);
-  printf("\n");
-
   switch (mainMenu)
   {
 
     case 1:
       screen(steveStartup);
-      printf("Lancement du protocole de peignage ...");
       steve();
-      break;
+    break;
 
     case 2:
       screen(optStartup);
-      printf("Lancement de l'outil de modification du protocole ...");
-      option();
-      break;
+      opt();
+    break;
 
     case 3:
-      lcdShow( int lcdScreen = 3)
-      printf("La machine est en train de se recalibrer");
       calibrage();
-      break;
+    break;
 
     default:
-      lcdShow( int lcdScreen = 4 );
-      printf("Vous n'avez fait votre choix \n ou le programme ne le reconnais pas");
-      break;
+      screen(errMainMenu);
+    break;
 
   }
   return 0;

@@ -14,11 +14,8 @@ int screen(lcdScreen)
   {
 
     case 'welcome':
-    lcdMessage (void)
-    {
       LcdString(" La machine se prépare, \n");
       LcdString(" Veuillez Patienter");
-    }
     break;
     case 'steveStartup':
       LcdString(" Le protocole de peignage \n");
@@ -199,7 +196,7 @@ int screen(lcdScreen)
         while ( captorDown == 1 || token == 5 )
         {
           screen(alertRUN);
-          bibAlert(struct config(alertMod));
+          bipAlert(struct config(alertMod));
           token = token++;
           interface(any);
         }
@@ -208,5 +205,100 @@ int screen(lcdScreen)
         {
           screen(tokenError);
           break;
+        }
+      }
+////////////////////////////////////////////////////////////////////////////////
+//                              Set Options Menu                              //
+////////////////////////////////////////////////////////////////////////////////
+      optUpSpeed()
+      {
+        screen(optUpSpeed)
+        switch (cardinal)
+        {
+          case up:
+          continue;
+
+          case left:
+          break;
+
+          case right:
+          optSetUpSpeed();
+          break;
+
+          case down:
+          optDownSpeed();
+          break;
+
+          default
+          screen(errOptUpSpeed);
+        }
+      }
+      optDownSpeed()
+      {
+        screen(optDownSpeed)
+        switch (cardinal)
+        {
+          case up:
+          continue;
+
+          case left:
+          break;
+
+          case right:
+          optSetDownSpeed();
+          break;
+
+          case down:
+          optIncubTime();
+          break;
+
+          default
+          screen(errOptDownSpeed);
+        }
+      }
+      optIncubTime()
+      {
+        screen(optIncubTime)
+        switch (cardinal)
+        {
+          case up:
+          continue;
+
+          case left:
+          break;
+
+          case right:
+          optSetIncubTime();
+          break;
+
+          case down:
+          optAlertType();
+          break;
+
+          default
+          screen(errOptIncubTime);
+        }
+      }
+      optAlertType()
+      {
+        screen(optDownSpeed)
+        switch (cardinal)
+        {
+          case up:
+          continue;
+
+          case left:
+          break;
+
+          case right:
+          optSetIncubTime();
+          break;
+
+          case down:
+          optUpSpeed();
+          break;
+
+          default
+          screen(errOptIncubTime);
         }
       }
