@@ -239,23 +239,19 @@ int cursorMenu()
   {
     b=0; // buttons have not been pressed
   }   
-else
-  if (voltage>1.66 && voltage<1.70)
+else if (voltage>1.66 && voltage<1.70)
   {
     b=1; // Left
   }     
-  else
-    if (voltage>2.20 && voltage<2.26)
+  else if (voltage>2.20 && voltage<2.26)
     {
       b=2; // Up
     }       
-    else
-      if (voltage>2.47 && voltage<2.53)
+    else if (voltage>2.47 && voltage<2.53)
       {
         b=3; // Down
       }         
-      else
-        if (voltage>2.63 && voltage<2.69)
+      else if (voltage>2.63 && voltage<2.69)
         {
           b=4; // Right
         }  
@@ -269,10 +265,11 @@ return b;
 
 void loop(void)
 {
-  int choix = 1;
-  int x = 0;
-  if ( cursorMenu() == 2 ) { x--; choix=x; }
-  if ( cursorMenu() == 3 ) { x++; choix=x; }
+  int choix;
+  int x = 1;
+  if ( cursorMenu() == 2 ) { x--; }
+  if ( cursorMenu() == 3 ) { x++; }
+  choix = x;
   if ( choix >=3 ) { choix = 3; }
   if ( choix <=1 ) { choix = 1; }
   gotoXY(25,0);
@@ -308,6 +305,7 @@ void loop(void)
     LcdString("- ");
   } 
   LcdString ("Calibrer");
+  delay(1000);
 }
 
 
