@@ -195,15 +195,119 @@ void gotoXY(int x, int y)
 ////////////////////////////////////////////////////////////////////////////////
 //                           WRITTER                                           //
 ////////////////////////////////////////////////////////////////////////////////
+void drawLine(void)
+{
+  unsigned char  j;  
+   for(j=0; j<84; j++) // top
+	{
+          gotoXY (j,0);
+	  LcdWrite (1,0x01);
+  } 	
+  for(j=0; j<84; j++) //Bottom
+	{
+          gotoXY (j,5);
+	  LcdWrite (1,0x80);
+  } 	
+
+  for(j=0; j<6; j++) // Right
+	{
+          gotoXY (83,j);
+	  LcdWrite (1,0xff);
+  } 	
+	for(j=0; j<6; j++) // Left
+	{
+          gotoXY (0,j);
+	  LcdWrite (1,0xff);
+  }
+
+}
+
 void setup(void)
 {
   LcdInitialise();
   LcdClear();
+  pinMode(A5, INPUT_PULLUP);
+  Serial.begin(9600);
 }
+int cursorMenu()
+  {
+    int sensorValue = analogRead(A5);
+    float voltage = sensorValue * (5.0 / 1023.0);
+    int b = 0;
+  //c=analogRead(5);  get the analog value  
+  if (voltage>3.20 && voltage<3.40)
+  {
+    b=0; // buttons have not been pressed
+  }   
+else
+  if (voltage>1.66 && voltage<1.70)
+  {
+    b=1; // Left
+  }     
+  else
+    if (voltage>2.20 && voltage<2.26)
+    {
+      b=2; // Up
+    }       
+    else
+      if (voltage>2.47 && voltage<2.53)
+      {
+        b=3; // Down
+      }         
+      else
+        if (voltage>2.63 && voltage<2.69)
+        {
+          b=4; // Right
+        }  
+Serial.println(voltage);        
+
+return b;
+
+
+}
+
 
 void loop(void)
 {
-  gotoXY(1,1);
-  LcdString ("1234567890123456789");
-//  delay(500);
+  int choix = 1;
+  int x = 0;
+  if ( cursorMenu() == 2 ) { x--; choix=x; }
+  if ( cursorMenu() == 3 ) { x++; choix=x; }
+  if ( choix >=3 ) { choix = 3; }
+  if ( choix <=1 ) { choix = 1; }
+  gotoXY(25,0);
+  LcdString ("Menu");
+  gotoXY(0,2);
+  if (choix == 1) 
+  { 
+    LcdString("->");
+  } 
+  else 
+  { 
+    LcdString("- ");
+  } 
+  LcdString ("Lancer");
+  
+  gotoXY(0,3);
+  if (choix == 2)
+  { 
+    LcdString("->");
+  } 
+  else 
+  { 
+    LcdString("- ");
+  } 
+  LcdString ("Options");
+  gotoXY(0,4);
+  if (choix == 3) 
+  { 
+    LcdString("->");
+  } 
+  else 
+  { 
+    LcdString("- ");
+  } 
+  LcdString ("Calibrer");
 }
+
+

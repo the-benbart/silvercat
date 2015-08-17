@@ -25,7 +25,7 @@ switch (opt)
     optAlertType()
 
   default:
-    screen(errOpt);
+    screen(errOptMenu);
     break;
 
 }

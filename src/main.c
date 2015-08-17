@@ -32,7 +32,7 @@ int main (void)
     break;
 
     case 3:
-      calibrage();
+      doCalibrate();
     break;
 
     default:
