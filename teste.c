@@ -1,4 +1,6 @@
 // http://playground.arduino.cc/Code/PCD8544
+int choix = 1;
+int menuScroll = 1;
 ////////////////////////////////////////////////////////////////////////////////
 //                                 PIN TABLE                                  //
 ////////////////////////////////////////////////////////////////////////////////
@@ -197,23 +199,23 @@ void gotoXY(int x, int y)
 ////////////////////////////////////////////////////////////////////////////////
 void drawLine(void)
 {
-  unsigned char  j;  
+  unsigned char  j;
    for(j=0; j<84; j++) // top
 	{
           gotoXY (j,0);
 	  LcdWrite (1,0x01);
-  } 	
+  }
   for(j=0; j<84; j++) //Bottom
 	{
           gotoXY (j,5);
 	  LcdWrite (1,0x80);
-  } 	
+  }
 
   for(j=0; j<6; j++) // Right
 	{
           gotoXY (83,j);
 	  LcdWrite (1,0xff);
-  } 	
+  }
 	for(j=0; j<6; j++) // Left
 	{
           gotoXY (0,j);
@@ -221,7 +223,6 @@ void drawLine(void)
   }
 
 }
-
 void setup(void)
 {
   LcdInitialise();
@@ -229,83 +230,80 @@ void setup(void)
   pinMode(A5, INPUT_PULLUP);
   Serial.begin(9600);
 }
+////////////////////////////////////////////////////////////////////////////////
+//                                    DRIVERS boutons                         //
+////////////////////////////////////////////////////////////////////////////////
 int cursorMenu()
   {
     int sensorValue = analogRead(A5);
     float voltage = sensorValue * (5.0 / 1023.0);
     int b = 0;
-  //c=analogRead(5);  get the analog value  
-  if (voltage>3.20 && voltage<3.40)
-  {
-    b=0; // buttons have not been pressed
-  }   
-else if (voltage>1.66 && voltage<1.70)
+if (voltage>1.66 && voltage<1.70)
   {
     b=1; // Left
-  }     
+  }
   else if (voltage>2.20 && voltage<2.26)
     {
-      b=2; // Up
-    }       
+     b=2; // Up
+    }
     else if (voltage>2.47 && voltage<2.53)
       {
         b=3; // Down
-      }         
+      }
       else if (voltage>2.63 && voltage<2.69)
         {
           b=4; // Right
-        }  
-Serial.println(voltage);        
-
+        }
+Serial.println(voltage);
 return b;
-
-
 }
-
-
+int menuTicket(int id)
+{
+  if (id == choix) { LcdString ("->");  }
+  else { LcdString ("- "); }
+}
 void loop(void)
 {
-  int choix;
-  int x = 1;
-  if ( cursorMenu() == 2 ) { x--; }
-  if ( cursorMenu() == 3 ) { x++; }
-  choix = x;
-  if ( choix >=3 ) { choix = 3; }
-  if ( choix <=1 ) { choix = 1; }
+////////////////////////////////////////////////////////////////////////////////
+//                                   INIT variables                           //
+////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
+//                             Selectionner le menu                           //
+////////////////////////////////////////////////////////////////////////////////
+  switch (cursorMenu())
+  {
+    case 1:
+    menuScroll--;
+    break;
+    case 2:
+    choix--;
+    break;
+    case 3:
+    choix++;
+    break;
+    case 4:
+    menuScroll++;
+    break;
+  }
+////////////////////////////////////////////////////////////////////////////////
+//                                  Quelques règles                           //
+////////////////////////////////////////////////////////////////////////////////
+if (choix >= 3) { choix = 3; }
+if (choix <= 1) { choix = 1; }
+////////////////////////////////////////////////////////////////////////////////
+//                              Menu                                          //
+////////////////////////////////////////////////////////////////////////////////
   gotoXY(25,0);
-  LcdString ("Menu");
+  LcdString (" Menu");
   gotoXY(0,2);
-  if (choix == 1) 
-  { 
-    LcdString("->");
-  } 
-  else 
-  { 
-    LcdString("- ");
-  } 
-  LcdString ("Lancer");
-  
+  menuTicket(1);
+  LcdString (" Lancer");
   gotoXY(0,3);
-  if (choix == 2)
-  { 
-    LcdString("->");
-  } 
-  else 
-  { 
-    LcdString("- ");
-  } 
-  LcdString ("Options");
+  menuTicket(2);
+  LcdString (" Options");
   gotoXY(0,4);
-  if (choix == 3) 
-  { 
-    LcdString("->");
-  } 
-  else 
-  { 
-    LcdString("- ");
-  } 
-  LcdString ("Calibrer");
-  delay(1000);
+  menuTicket(3);
+  LcdString (" Calibrer");
+  delay(200);
 }
-
-
