@@ -11,35 +11,21 @@ inch case contain :
 3 - Doing Job or Function
 4 - Breaking switch
 */
-
-
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                        INIT                                                           //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 int main (void)
 {
-  int mainMenu;
-  screen(welcome);
-  switch (mainMenu)
-  {
-
-    case 1:
-      screen(steveStartup);
-      steve();
-    break;
-
-    case 2:
-      screen(optStartup);
-      opt();
-    break;
-
-    case 3:
-      doCalibrate();
-    break;
-
-    default:
-      screen(errMainMenu);
-    break;
-
-  }
-  return 0;
-
+  gotoXY(25,0);
+  LcdString (" Menu");
+  gotoXY(0,2);
+  menuTicket(1);
+  LcdString (" Lancer");
+  gotoXY(0,3);
+  menuTicket(2);
+  LcdString (" Options");
+  gotoXY(0,4);
+  menuTicket(3);
+  LcdString (" Calibrer");
+  delay(200);
 }

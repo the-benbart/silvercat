@@ -1,9 +1,12 @@
 // Internals function
-
+////////////////////////////////////////////////////////////////////////////////
+//                            Variables init                                  //
+////////////////////////////////////////////////////////////////////////////////
+int choix = 1;
+int menuScroll = 1;
 ////////////////////////////////////////////////////////////////////////////////
 //                          Main user config                                  //
 ////////////////////////////////////////////////////////////////////////////////
-
 struct config // Core configuration, PLEASE DON'T TOUCH
 {
   int calibrageSpeed[255]; // 0-255 speed to Calibrate, DO NOT TOUCH
@@ -13,139 +16,206 @@ struct config // Core configuration, PLEASE DON'T TOUCH
   int alertMod[2]; // 0=No Alert / 1 = Few 3 bip alert / 2 = One bip every 5 seconds
 }
 ////////////////////////////////////////////////////////////////////////////////
-//                          LCD control                                       //
+//                             Menu function                                  //
+////////////////////////////////////////////////////////////////////////////////
+switch (cursorMenu())
+{
+  case 1:
+  menuScroll--;
+  break;
+  case 2:
+  choix--;
+  break;
+  case 3:
+  choix++;
+  break;
+  case 4:
+  menuScroll++;
+  break;
+}
+
+int menuTicket(int id)
+{
+  if (id == choix) { LcdString ("->");  }
+  else { LcdString ("- "); }
+  switch (choix)
+  {
+    case 1:
+    if ( menuScroll == 2 ) { steve(); }
+    break;
+    case 2:
+    if ( menuScroll == 2 ) { opt(); }
+    break;
+    case 3:
+    if ( menuScroll == 2 ) { doCalibrate(); }
+    break;
+  }
+}
+////////////////////////////////////////////////////////////////////////////////
+//                               Menu behavor                                 //
+////////////////////////////////////////////////////////////////////////////////
+if (choix >= 3) { choix = 3; }
+if (choix <= 1) { choix = 1; }
+////////////////////////////////////////////////////////////////////////////////
+//                             Screen()  define                               //
 ////////////////////////////////////////////////////////////////////////////////
 screen()
 int screen(lcdScreen)
 {
+  LcdClear()
   switch (lcdScreen)
   {
-
-    case 'welcome':
-      int choix = 2;
-      gotoXY(25,0);
-      LcdString ("Menu");
-      gotoXY(0,2);
-      if (choix == 1)
-      {
-        LcdString("-> ");
-      }
-      else
-      {
-        LcdString("-  ");
-      }
-      LcdString (" Lancer");
-      gotoXY(0,3);
-      if (choix == 2)
-      {
-        LcdString("-> ");
-      }
-      else
-      {
-        LcdString("-  ");
-      }
-      LcdString (" Options");
-      gotoXY(0,4);
-      if (choix == 3)
-      {
-        LcdString("-> ");
-      }
-      else
-      {
-        LcdString("-  ");
-      }
-      LcdString (" Calibrer");
-    break;
     case 'steveStartup':
-      LcdString(" Le protocole de peignage \n");
-      LcdString(" d'ADN commence");
+      gotoXY(25,0);
+      LcdString("Peignage");
+      gotoXY(0,2);
+      LcdString("Le protocole");
+      gotoXY(0,3);
+      LcdString("demmarre");
     break;
     case 'optStartup':
-      LcdString("Menu de configuration :\n");
+      gotoXY(25,0);
+      LcdString("Options");
+      gotoXY(0,3)
+      LcdString("Menu de configuration");
     break;
     case 'calibrageStart':
-      LcdString("La machine se calibre\n");
-      LcdString(" Chargement ... ");
+      gotoXY(25,0);
+      LcdString("Calibrage");
+      gotoXY(0,3);
+      LcdString("Chargement ...");
     break;
     case 'calibrageRUN':
-    LcdString("La machine est en cours de\n");
-      LcdString("calibrage");
+      gotoXY(25,0);
+      LcdString("Calibrage");
+      gotoXY(0,3);
+      LcdString("En cours");
     break;
     case 'calibrageStop':
-      LcdString("Ma machine à fini de se calibrer\n");
+      gotoXY(25,0);
+      LcdString("Calibrage");
+      gotoXY(0,3);
+      LcdString("Fin");
     break;
     case 'tokenError':
-      LcdString("Une erreur est survenue \n");
-      LcdString("pendant le protocole\n");
+      gotoXY(25,0);
+      LcdString("Erreur\n");
+      gotoXY(0,2);
       LcdString("Err: tokenError");
     break;
     case 'downStart':
-      LcdString("Descente des lamelles\n");
-      LcdString(" Chargement ... ");
+      gotoXY(25,0);
+      LcdString("Descente");
+      gotoXY(0,2);
+      LcdString("Chargement ...");
     break;
     case 'downRUN':
-      LcdString("Descente des lamelles\n");
+      gotoXY(25,0);
+      LcdString("Descente")
+      gotoXY(0,2);
       LcdString("En cours");
     break;
     case 'downStop':
-      LcdString("Les lamelles sont plongées\n");
+      gotoXY(25,0);
+      LcdString("Descente")
+      gotoXY(0,2);
+      LcdString("Fin")
     break;
     case 'holdStart':
-      LcdString("Les lamelles sont plongées\n");
-      LcdString("Temps d'incubation : %d", holdSleep);
+      gotoXY(25,0);
+      LcdString("incubation")
+      gotoXY(0,2);
+      LcdString("chargement ...")
     break;
     case 'holdRUN':
-      LcdString("Les lamelles sont plongées\n");
-      LcdString("Temps restant : %d", holdSleepRemaining);
+      gotoXY(25,0);
+      LcdString("incubation")
+      gotoXY(0,2);
+      LcdString("En cours")
     break;
     case 'holdStop':
-      LcdString("incubation terminé");
+      gotoXY(25,0);
+      LcdString("incubation")
+      gotoXY(0,2);
+      LcdString("Fin")
     break;
     case 'upStart':
-      LcdString("Les lamelles vont maintenant\n");
-      LcdString("remonter lentement.\n");
-      LcdString("Chargement")
+      gotoXY(25,0);
+      LcdString("Monter")
+      gotoXY(0,2);
+      LcdString("Chargement ...")
     break;
     case 'upRUN':
-      LcdString("Les lamelles sont en train de remonter\n");
-      LcdString("...  ...  ...  ...");
+      gotoXY(25,0);
+      LcdString("Monter")
+      gotoXY(0,2);
+      LcdString("En cours")
     break;
     case 'upStop':
-      LcdString("Les lamelles sont prêtes\n");
+      gotoXY(25,0);
+      LcdString("Monter")
+      gotoXY(0,2);
+      LcdString("Fin")
     break;
     case 'alertStart':
-      LcdString("Vous pouvez maintenant reprendre\n");
-      LcdString("vos lamelles");
+      gotoXY(25,0);
+      LcdString("Alert")
+      gotoXY(0,2);
+      LcdString("Le protocole")
+      gotoXY(0,3);
+      LcdString("S'est executer");
     break;
     case 'alertRUN':
-      LcdString("Vous pouvez maintenant reprendre\n");
+      gotoXY(25,0);
+      LcdString("Alert");
+      gotoXY(0,2);
+      LcdString("reprenez");
+      gotoXY(0,3);
       LcdString("vos lamelles");
     break;
     case 'alertStop':
+      gotoXY(25,0);
       LcdString("Le programme va maintenant\n");
       LcdString("revenir au menu principale");
     break;
     case 'optUpSpeed':
-      LcdString("Veuillez indiquer la vitesse\n");
+      gotoXY(0,0);
+      LcdString("option/Monter");
+      gotoXY(0,2);
+      LcdString("Renseigner la vitesse");
+      gotoXY(0,3);
       LcdString("de remonter :");
     break;
     case 'optDownSpeed':
-      LcdString("Veuillez indiquer la vitesse\n");
+      gotoXY(0,0);
+      LcdString("option/Descente");
+      gotoXY(0,2);
+      LcdString("Renseigner la vitesse");
+      gotoXY(0,3);
       LcdString("de descente :");
     break;
     case 'optIncubTime':
-      LcdString("Veuillez le Temps\n");
+      gotoXY(0,0);
+      LcdString("option/incubation");
+      gotoXY(0,2);
+      LcdString("Renseigner le temps");
+      gotoXY(0,3);
       LcdString("d'incubation :");
     break;
     case 'optAlertType':
-      LcdString("Veuillez indiquer le Type\n");
-      LcdString("d'alerte :");
+      gotoXY(0,0);
+      LcdString("option/Alerte");
     break;
     case 'optError':
-      LcdString("Une erreur est survenue\n");
+      gotoXY(25,0);
+      LcdString("Erreur\n");
+      gotoXY(0,2);
       LcdString("Err: optError");
     break;
     default
+      gotoXY(25,0);
+      LcdString("Erreur\n");
+      gotoXY(0,2);
       LcdString("Err: ScreenDefault");
     break;
     }
